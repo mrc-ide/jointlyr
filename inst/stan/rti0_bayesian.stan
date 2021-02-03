@@ -1,0 +1,68 @@
+functions {
+  real force_of_infection_obs(vector incid_init, vector incid_obs, vector omega, real rt, int back) {
+    
+    vector[rows(incid_init) + rows(incid_obs)] incid_full;
+    real lambda;
+    // At this point you have the incidence from days 1 through to
+    // `back` which here is 100.
+    // Stack this on top of the observed deaths to get a time series
+    // from 1 to 110.
+    incid_full[1:back] = incid_init;
+    incid_full[(back + 1):rows(incid_full)] = incid_obs;
+    lambda = dot_product(incid_full, omega);
+    return(lambda);
+  }
+
+  vector force_of_infection_unobs(real log_i0, vector omega, real rt, int back) {
+    
+    vector[back] incid_init;
+    int last = dims(omega)[1];
+    incid_init = rep_vector(0, back);
+    incid_init[1] = exp(log_i0);
+    for (index in 2:back) {
+      incid_init[index] = rt * dot_product(incid_init[1:index],
+                                           omega[(last - index + 1):last]);
+    }
+    return(incid_init);
+  }
+}
+data {
+  int window; // The window size used for model calibration
+  // Size of the window over which to estimate incidence
+  int window_back;
+  // Incidence in the window. This will be integer of course but here
+  // we use a real data type because estimated incidence is on log-scale
+  // and then exponentiated. So that it is not guranteed to be an integer.
+  vector[window] incid; 
+  vector[window + window_back] omega; // flipped discretised SI distribution
+  real rt_init; // Set to 1
+  //set to log of the mean of the incidence in the calibration window
+  real log_incid_init;
+
+}
+parameters {
+  real log_i0;
+  real rt_est;
+}
+model {
+  vector[window_back] incid_est;
+  real lambda;
+
+  // Sample values from log_incid_init
+  log_i0 ~ normal(log_incid_init, 1);
+  // Sample Rt
+  rt_est ~ exponential(rt_init);
+  incid_est = force_of_infection_unobs(log_i0, omega, rt_est, window_back);
+  // Get the daily force of infection
+  for (index in 1:window) {
+    lambda = force_of_infection_obs(incid_est, incid[1:index], 
+                                    omega[1:(window_back + index)], 
+                                    rt_est, window_back);
+    target += -rt_est * lambda + incid[index] * log(rt_est * lambda);
+  }
+
+}
+generated quantities {
+  vector[window_back] incid_est;
+  incid_est = force_of_infection_unobs(log_i0, omega, rt_est, window_back);
+}
