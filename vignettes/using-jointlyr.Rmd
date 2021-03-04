@@ -1,0 +1,41 @@
+---
+title: "Using jointlyr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using jointlyr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(jointlyr)
+```
+
+## Set up data
+
+### Incidence
+
+```{r}
+incid <- c(45, 28, 91, 36, 43, 50, 77, 54, 44, 45)
+```
+
+### Serial Interval Distribution
+
+```{r}
+si_trunc <- 20
+si_distr <- EpiEstim::discr_si(seq(0, si_trunc), 6.48, 3.83)
+si_distr <- si_distr / sum(si_distr)
+```
+
+
+```{r}
+## Default args for iter and chains
+jointlyr::jointly_estimate(10, 100, incid, si_distr)
+```
