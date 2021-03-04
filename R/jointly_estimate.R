@@ -14,6 +14,7 @@
 ##' @param ... Arguments passed to `rstan::fit` (e.g. iter, chains).
 ##' @return an object of class stanfit
 ##' @author Sangeeta Bhatia
+##' @export
 jointly_estimate <- function(window, window_back, incid, si_distr, ...) {
 
   omega <- rev(si_distr)
@@ -23,6 +24,6 @@ jointly_estimate <- function(window, window_back, incid, si_distr, ...) {
     omega = omega, log_incid_init = log_incid_init,
     si_trunc = length(omega) - 1
   )
-  fit <- rstan::fit(stanmodels$rti0_bayesian, data = standata, ...)
+  fit <- rstan::stan(stanmodels$rti0_bayesian, data = standata, ...)
   fit
 }
