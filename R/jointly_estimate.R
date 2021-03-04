@@ -16,7 +16,7 @@
 ##' @author Sangeeta Bhatia
 jointly_estimate <- function(window, window_back, incid, si_distr, ...) {
 
-  omega <- rev(si_distrs[[2]]$dist)
+  omega <- rev(si_distr)
   log_incid_init <- log(mean(incid))
   standata <- list(
     window = window, window_back = window_back, incid = incid,

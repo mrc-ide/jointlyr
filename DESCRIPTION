@@ -6,12 +6,16 @@ Authors@R:
                role = c("aut", "cre"),
                email = "s.bhatia@imperial.ac.uk"),
                person(given = "Pierre", family = "Nouvellet",
-                      role = c("aut", "cre"),
-                      email = "s.bhatia@imperial.ac.uk"),               
-          )           
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+                      role = c("aut"),
+                      email = "p.nouvellet@imperial.ac.uk"),
+               person(given = "Anne", family = "Cori",
+                      role = c("aut"),
+                      email = "a.cori@imperial.ac.uk"),
+               person(given = "Jack", family = "Wardle",
+                      role = c("aut"),
+                      email = "j.wardle19@imperial.ac.uk"))           
+Description: Provides a Stan implementation of a method to jointly estimate incidence and reproduction number.
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
