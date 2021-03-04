@@ -1,12 +1,14 @@
 Package: jointlyr
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Joint estimation of initial incidence and reproduction number
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+      c(person(given = "Sangeeta", family = "Bhatia",
+               role = c("aut", "cre"),
+               email = "s.bhatia@imperial.ac.uk"),
+               person(given = "Pierre", family = "Nouvellet",
+                      role = c("aut", "cre"),
+                      email = "s.bhatia@imperial.ac.uk"),               
+          )           
 Description: What the package does (one paragraph).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license

@@ -44,29 +44,25 @@ data {
   // flipped discretised SI distribution, +1 because of probability
   // mass at day 0
   vector[si_trunc + 1] omega; 
-  real rt_init; // Set to 1
   //set to log of the mean of the incidence in the calibration window
   real log_incid_init;
 
 }
 parameters {
-  real log_i0;
-  real rt_est;
+  real <lower = log_incid_init - log(10) * 100/6, upper = log_incid_init - log(0.5) * 100/6> log_i0;
+  real <lower = 0.1, upper = 10> rt_est;
 }
 model {
   vector[window_back] incid_est;
   real lambda;
-
-  // Sample values from log_incid_init
-  log_i0 ~ normal(log_incid_init, 1);
-  // Sample Rt
-  rt_est ~ exponential(rt_init);
-  incid_est = force_of_infection_unobs(log_i0, omega, rt_est, window_back, si_trunc);
+  incid_est = force_of_infection_unobs(log_i0, omega, rt_est,
+                                       window_back, si_trunc);
   // Get the daily force of infection
   for (index in 1:window) {
     lambda = force_of_infection_obs(incid_est, incid[1:index], 
                                     omega,  rt_est, window_back, si_trunc);
     target += -rt_est * lambda + incid[index] * log(rt_est * lambda);
+    //target += 1;
   }
 
 }
