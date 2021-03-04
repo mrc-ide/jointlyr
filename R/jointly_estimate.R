@@ -24,6 +24,6 @@ jointly_estimate <- function(window, window_back, incid, si_distr, ...) {
     omega = omega, log_incid_init = log_incid_init,
     si_trunc = length(omega) - 1
   )
-  fit <- rstan::stan(stanmodels$rti0_bayesian, data = standata, ...)
+  fit <- rstan::sampling(stanmodels$rti0_bayesian, data = standata, ...)
   fit
 }
